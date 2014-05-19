@@ -206,7 +206,7 @@ module Make (IO : IO.S) = struct
     | `Extension s -> char '\\' @> raw s (* FIXME: encode in MUTF7 ? *)
 
   let gm_label s =
-    raw (Utils.encode_mutf7 s)
+    quoted_string (Utils.encode_mutf7 s)
 
   let entry_type_req = function
     | `All -> "all"
