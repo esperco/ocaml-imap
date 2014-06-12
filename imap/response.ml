@@ -278,8 +278,11 @@ mod-sequence-value  = 1*DIGIT
                           ;; (1 <= n < 18,446,744,073,709,551,615)
 *)
 let mod_sequence_value =
-  let number_re = Str.regexp "[0-9]*" in
-  matches number_re >>= fun s -> try return (Modseq.of_string s) with _ -> fail
+  let number_re = Str.regexp "[+-]?[0-9]*" in
+  matches number_re >>= fun s ->
+  let i64 = Int64.of_string s in
+  if i64 < Int64.zero then return (Modseq.of_int 0)
+  else try return (Modseq.of_string s) with _ -> fail
 
 (*
 resp-text-code  = "ALERT" /
