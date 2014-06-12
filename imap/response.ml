@@ -281,7 +281,7 @@ let mod_sequence_value =
   let number_re = Str.regexp "[+-]?[0-9]*" in
   matches number_re >>= fun s ->
   let i64 = Int64.of_string s in
-  if i64 < Int64.zero then return (Modseq.of_int 0)
+  if i64 < Int64.zero then return (Modseq.of_int 1)
   else try return (Modseq.of_string s) with _ -> fail
 
 (*
