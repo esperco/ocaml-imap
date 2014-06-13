@@ -79,6 +79,23 @@ let rec option_map f = function
 let compare_ci s1 s2 =
   compare (String.uppercase s1) (String.uppercase s2)
 
+let truncate_string maxlen s =
+  match maxlen with
+  | None -> s
+  | Some n ->
+    let n = max 0 n in
+    let len = String.length s in
+    if len <= n then
+      s
+    else if n < 3 then
+      String.sub s 0 n
+    else
+      String.sub s 0 (n-3) ^ "..."
+
+let log_line_max_length = ref None
+
+let truncate_body s = truncate_string !log_line_max_length s
+
 (* The default logger echoes both input and output to [stderr].  In order to
    make them look a little nicer, new lines are preceded by "S: " or "C: "
    depending on the case.  Here a new line means either "\r\n" or "\n". *)
@@ -109,7 +126,7 @@ let log =
             let hascr = idx > 0 && str.[idx-1] = '\r' in
             let str' = String.sub str off (if hascr then idx-off-1 else idx-off) in
             prerr_string header;
-            prerr_string str';
+            prerr_string (truncate_body str');
             prerr_newline ();
             loop `NL (idx + 1)
           end
@@ -118,7 +135,7 @@ let log =
           let hascr = len > 0 && str.[len-1] = '\r' in
           let str' = String.sub str off (if hascr then len-off-1 else len-off) in
           prerr_string header;
-          prerr_string str';
+          prerr_string (truncate_body str');
           if hascr then `CR else `Other
     in
     match origin with
