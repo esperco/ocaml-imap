@@ -92,6 +92,18 @@ let truncate_string maxlen s =
     else
       String.sub s 0 (n-3) ^ "..."
 
+let test_truncate () =
+  assert (truncate_string None "" = "");
+  assert (truncate_string (Some 0) "abc" = "");
+  assert (truncate_string (Some (-1)) "abc" = "");
+  assert (truncate_string (Some 2) "abc" = "ab");
+  assert (truncate_string (Some 3) "abc" = "abc");
+  assert (truncate_string (Some 4) "abc" = "abc");
+  assert (truncate_string (Some 3) "abcd" = "...");
+  assert (truncate_string (Some 10) "abc" = "abc");
+  assert (truncate_string (Some 10) "012345678912345" = "0123456...");
+  ()
+
 let log_line_max_length = ref None
 
 let truncate_body s = truncate_string !log_line_max_length s
