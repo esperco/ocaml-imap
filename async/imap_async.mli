@@ -44,9 +44,6 @@ exception BYE
 (** Raised when a server response cannot be parsed. *)
 exception Parse_error of string * int
 
-(** Raised if the session is not connected. *)
-exception Not_connected
-
 (** I/O error *)
 exception Io_error of exn
 
@@ -236,7 +233,7 @@ val uid_search : session -> ?charset:string -> search_key -> Uid.t list Deferred
 (** Like {!search}, but returns the unique identification numbers of the
     matching messages. *)
 
-val fetch : session -> Seq_set.t -> fetch_att list -> (Seq.t * msg_att) Pipe.Reader.t
+val fetch : session -> Seq_set.t -> fetch_att list -> (Seq.t * msg_att list) Pipe.Reader.t
 (** [fetch s set atts h] retrieve flags and/or other attributes [att] for those
     messages whose message sequence numbers belong to [set].  The most common
     attribytes are:
@@ -255,19 +252,19 @@ val fetch : session -> Seq_set.t -> fetch_att list -> (Seq.t * msg_att) Pipe.Rea
     [n] and a message attribute [att]. *)
 
 val fetch_changedsince : session -> Seq_set.t -> Modseq.t ->
-  fetch_att list -> (Seq.t * msg_att) Pipe.Reader.t
+  fetch_att list -> (Seq.t * msg_att list) Pipe.Reader.t
 (** [fetch_changedsince s set modseq atts] is like {!fetch}, but only those
     messages that have a modification sequence number at least [modseq] are
     fetched.
 
     This command requires the CONDSTORE extension. *)
 
-val uid_fetch : session -> Uid_set.t -> fetch_att list -> (Seq.t * msg_att) Pipe.Reader.t
+val uid_fetch : session -> Uid_set.t -> fetch_att list -> (Seq.t * msg_att list) Pipe.Reader.t
 (** Like {!fetch}, but the elements of the set are taken to be unique
     identification numbers. *)
 
 val uid_fetch_changedsince : session -> Uid_set.t -> Modseq.t ->
-  fetch_att list -> (Seq.t * msg_att) Pipe.Reader.t
+  fetch_att list -> (Seq.t * msg_att list) Pipe.Reader.t
 (** Like {!fetch_changedsince}, but the elements fo the set are taken to be
     unique identification numbers.
 

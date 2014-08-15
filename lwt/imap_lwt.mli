@@ -42,9 +42,6 @@ exception BYE
 (** Raised when a server response cannot be parsed. *)
 exception Parse_error of string * int
 
-(** Raised if the session is not connected. *)
-exception Not_connected
-
 (** I/O error *)
 exception Io_error of exn
 
@@ -234,7 +231,7 @@ val uid_search : session -> ?charset:string -> search_key -> Uid.t list Lwt.t
 (** Like {!search}, but returns the unique identification numbers of the
     matching messages. *)
 
-val fetch : session -> Seq_set.t -> fetch_att list -> (Seq.t * msg_att) Lwt_stream.t
+val fetch : session -> Seq_set.t -> fetch_att list -> (Seq.t * msg_att list) Lwt_stream.t
 (** [fetch s set atts] retrieves flags and/or other attributes [att] for those
     messages whose message sequence numbers belong to [set].  The most common
     attributes are:
@@ -253,19 +250,19 @@ val fetch : session -> Seq_set.t -> fetch_att list -> (Seq.t * msg_att) Lwt_stre
     and a message attribute [att]. *)
 
 val fetch_changedsince : session -> Seq_set.t -> Modseq.t ->
-  fetch_att list -> (Seq.t * msg_att) Lwt_stream.t
+  fetch_att list -> (Seq.t * msg_att list) Lwt_stream.t
 (** [fetch_changedsince s set modseq atts] is like {!fetch}, but only those
     messages that have a modification sequence number at least [modseq] are
     fetched.
 
     This command requires the CONDSTORE extension. *)
 
-val uid_fetch : session -> Uid_set.t -> fetch_att list -> (Seq.t * msg_att) Lwt_stream.t
+val uid_fetch : session -> Uid_set.t -> fetch_att list -> (Seq.t * msg_att list) Lwt_stream.t
 (** Like {!fetch}, but the elements of the set are taken to be unique
     identification numbers. *)
 
 val uid_fetch_changedsince : session -> Uid_set.t -> Modseq.t ->
-  fetch_att list -> (Seq.t * msg_att) Lwt_stream.t
+  fetch_att list -> (Seq.t * msg_att list) Lwt_stream.t
 (** Like {!fetch_changedsince}, but the elements fo the set are taken to be
     unique identification numbers.
 

@@ -24,28 +24,32 @@ This library has been greatly influenced by
 The library has several dependencies and the easiest way to install everything
 is to use [OPAM](http://opam.ocaml.org).
 
-1. Install the dependencies using OPAM:
+1. Install `ocaml-imap` from OPAM. For the `Lwt` backend, just do:
    ```sh
-   opam install ocamlfind uint ssl cryptokit ucorelib lwt sexplib
+   opam install ssl lwt imap
    ```
+   For the `Async` backend, do:
+   ```sh
+   opam install async_ssl imap
+   ```
+   Finally, simply doing
+   ```sh
+   opam install imap
+   ```
+   will install only the `unix` (synchronous) backend.
 
-2. (Optional) Install the `utop` toplevel:
+   Optionally, if you would like to use GNU SASL library to authenticate
+   with the server, you should include in each case the dependency `gsasl`:
+   `opam install gsasl imap`, or `opam install ssl lwt gsasl imap`, or
+   `opam install async_ssl gsasl imap`. See `gsasl/imap_gsasl.mli` for the interface.
+   
+2. Read the documentation in `imap/client.mli`, `imap/response.mli`, and
+   `imap/imap_types.mli`.
+
+3. (Optional) Install the `utop` toplevel:
    ```sh
    opam install utop
    ```
-
-3. Install `ocaml-imap` also from git:
-   ```sh
-   cd ~/tmp
-   git clone https://github.com/nojb/ocaml-imap
-   cd ocaml-imap
-   make
-   make install
-   ```
-   (NB: in order to uninstall this package do `ocamlfind remove imap`.)
-
-4. Read the documentation in `imap/client.mli`, `imap/response.mli`, and
-   `imap/imap_types.mli`.
 
 ## Usage
 
