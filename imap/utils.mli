@@ -43,3 +43,8 @@ val option_map : ('a -> 'b option) -> 'a list -> 'b list
 val compare_ci : string -> string -> int
 
 val log : [ `Client | `Server ] -> string -> unit
+
+val log_line_max_length : int option ref
+(** Log lines will be truncated to that length when logged.
+    This length does not include the ["C: "] or ["S: "] prefix.
+    The default is [None], i.e. no truncation takes place. *)
